@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build (Release x86)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-Location "$env:GITHUB_WORKSPACE"
+          msbuild .\coords.sln /t:Build /p:Configuration=Release /p:Platform=x86 /m
+
+      - name: Stage artifact
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = Join-Path $env:RUNNER_TEMP 'publish'
+          New-Item -ItemType Directory -Path $out -Force | Out-Null
+
+            $built = Join-Path $env:GITHUB_WORKSPACE 'coords\coords\bin\Release\coords.exe'
+          if (-not (Test-Path $built)) {
+            throw "Expected output not found: $built"
+          }
+
+          Copy-Item -Path $built -Destination (Join-Path $out 'Coords.exe') -Force
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ runner.temp }}/publish/Coords.exe
+          generate_release_notes: true
