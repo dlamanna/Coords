@@ -24,7 +24,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           Set-Location "$env:GITHUB_WORKSPACE"
-          msbuild .\coords.sln /t:Build /p:Configuration=Release /p:Platform=x86 /m
+          msbuild .\coords.sln /t:Build /p:Configuration=Release /p:Platform=x86 /p:RunPostBuildEvent=Never /m
 
       - name: Stage artifact
         shell: pwsh
