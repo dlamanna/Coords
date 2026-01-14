@@ -34,11 +34,16 @@ jobs:
           New-Item -ItemType Directory -Path $out -Force | Out-Null
 
             $built = Join-Path $env:GITHUB_WORKSPACE 'coords\bin\Release\coords.exe'
-          if (-not (Test-Path $built)) {
-            throw "Expected output not found: $built"
-          }
+            if (-not (Test-Path $built)) {
+              Write-Host "Expected output not found: $built"
+              Write-Host "Searching for coords.exe under workspace..."
+              Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter 'coords.exe' -File -ErrorAction SilentlyContinue |
+                Select-Object -First 25 -ExpandProperty FullName |
+                ForEach-Object { Write-Host "  $_" }
+              throw "Expected output not found: $built"
+            }
 
-          Copy-Item -Path $built -Destination (Join-Path $out 'Coords.exe') -Force
+            Copy-Item -Path $built -Destination (Join-Path $out 'Coords.exe') -Force
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
