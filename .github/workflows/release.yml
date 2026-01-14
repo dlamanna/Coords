@@ -33,7 +33,7 @@ jobs:
           $out = Join-Path $env:RUNNER_TEMP 'publish'
           New-Item -ItemType Directory -Path $out -Force | Out-Null
 
-            $built = Join-Path $env:GITHUB_WORKSPACE 'coords\coords\bin\Release\coords.exe'
+            $built = Join-Path $env:GITHUB_WORKSPACE 'coords\bin\Release\coords.exe'
           if (-not (Test-Path $built)) {
             throw "Expected output not found: $built"
           }
