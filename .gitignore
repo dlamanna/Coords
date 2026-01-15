@@ -1,0 +1,13 @@
+.vs/
+*.suo
+*.user
+
+# Build output
+bin/
+obj/
+
+# Publish temp
+**/.publish-tmp/
+
+# Logs
+*.log

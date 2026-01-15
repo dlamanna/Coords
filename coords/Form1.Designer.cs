@@ -58,7 +58,7 @@
             this.Text = "Coords";
             this.TopMost = true;
             this.ResumeLayout(false);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.formCloser);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormCloser);
         }
 
         #endregion
